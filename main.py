@@ -9,7 +9,7 @@ from schema import Event as SchemaEvent
 from dotenv import load_dotenv
 from database import SessionLocal, engine
 import models
-from admin import check_first_bill, check_feedback
+from admin import check_first_bill, check_feedback, alert_user
 
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -43,7 +43,7 @@ def root(event: SchemaEvent, database: Session = Depends(get_db)):
 @app.get("/admin/{userid}")
 def admins(userid: str, db: Session = Depends(get_db)):
     check_feedback(db, userid)
-
+    alert_user(db, userid)
 
 if __name__ == '__main__':
     uvicorn.run(app, host="0.0.0.0", port=8000)
