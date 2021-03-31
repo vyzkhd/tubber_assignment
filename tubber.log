@@ -1,0 +1,4 @@
+uvicorn.error - INFO - Started server process [23]
+uvicorn.error - INFO - Waiting for application startup.
+uvicorn.error - INFO - Application startup complete.
+root - INFO - first bill pay for user 12374
