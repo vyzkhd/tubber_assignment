@@ -5,4 +5,7 @@ Business rules framework on eventstreams using FastAPI
      a) PostgreSQL database at 5432
      b) web container at 8000
      c) pgadmin at 5050 (creds in docker-compose.yml)
-2) run docker-compose up
+
+2) Make migrations 
+          docker-compose run web alembic revision --autogenerate -m "first  migration"
+3) run docker-compose up
