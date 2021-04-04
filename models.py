@@ -7,7 +7,7 @@ Base = declarative_base()
 class Event(Base):
     __tablename__ = "events"
 
-    userid = Column(Integer, primary_key=True, index=True)
+    userid = Column(Integer, index=True)
     ts = Column(String,)
     latlong = Column(String,)
     noun = Column(VARCHAR(length=10))
