@@ -1,6 +1,7 @@
 import uvicorn
 from fastapi import FastAPI, Depends
 import os 
+import sched, time 
 from fastapi_sqlalchemy import DBSessionMiddleware
 from fastapi_sqlalchemy import db
 from sqlalchemy.orm import Session
@@ -35,15 +36,16 @@ def root(event: SchemaEvent, database: Session = Depends(get_db)):
     db.session.commit()
 
     userid = event.userid
-    check_first_bill(database, userid)
+    if event.noun == 'bill':
+        check_first_bill(database, userid)
+       
+        s = sched.scheduler(time.time, time.sleep)
+        s.enter(5*60, 1, alert_user, (database, userid))
+        s.enter(15*60, 2, check_feedback, (database, userid))
+        s.run()
     return db_event
 
 
-
-@app.get("/admin/{userid}")
-def admins(userid: str, db: Session = Depends(get_db)):
-    check_feedback(db, userid)
-    alert_user(db, userid)
 
 if __name__ == '__main__':
     uvicorn.run(app, host="0.0.0.0", port=8000)
