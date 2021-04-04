@@ -1,5 +1,5 @@
 import uvicorn
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI, Depends, BackgroundTasks
 import os 
 import sched, time 
 from fastapi_sqlalchemy import DBSessionMiddleware
@@ -30,7 +30,7 @@ def get_db():
         db.close()
 
 @app.post("/events/", response_model=SchemaEvent)
-def root(event: SchemaEvent, database: Session = Depends(get_db)):
+async def root(event: SchemaEvent, background_tasks: BackgroundTasks, database: Session = Depends(get_db)):
     db_event = ModelEvent(**event.dict())
     db.session.add(db_event)
     db.session.commit()
@@ -42,7 +42,7 @@ def root(event: SchemaEvent, database: Session = Depends(get_db)):
         s = sched.scheduler(time.time, time.sleep)
         s.enter(5*60, 1, alert_user, (database, userid))
         s.enter(15*60, 2, check_feedback, (database, userid))
-        s.run()
+        background_tasks.add_task(s.run)
     return db_event
 
 
