@@ -2,6 +2,7 @@ from pydantic import BaseModel
 from typing import Dict
 
 class Event(BaseModel):
+    id: int 
     userid: int
     ts: str 
     latlong: str 
